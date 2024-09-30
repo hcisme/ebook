@@ -26,18 +26,25 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.chc.ebook.room.getDatabase
 import com.chc.ebook.utils.backgroundColors
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingPanel(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val contentVM = viewModel<ContentViewModel>()
+    val db = remember { context.getDatabase() }
 
     if (contentVM.isShowSettingPanel) {
         ModalBottomSheet(
@@ -61,19 +68,43 @@ fun SettingPanel(modifier: Modifier = Modifier) {
                             .clickable(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
-                            ) { contentVM.fs -= 1 },
+                            ) {
+                                if (contentVM.setting.fs == 10) {
+                                    return@clickable
+                                }
+                                val newSetting =
+                                    contentVM.setting.copy(fs = contentVM.setting.fs - 1)
+                                contentVM.setting = newSetting
+                                coroutineScope.launch {
+                                    db
+                                        .setting()
+                                        ?.insertOrUpdate(newSetting)
+                                }
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(Icons.Default.Remove, contentDescription = null)
                     }
-                    Text("${contentVM.fs}")
+                    Text("${contentVM.setting.fs}")
                     Box(
                         modifier = Modifier
                             .weight(1f)
                             .clickable(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
-                            ) { contentVM.fs += 1 },
+                            ) {
+                                if (contentVM.setting.fs == 40) {
+                                    return@clickable
+                                }
+                                val newSetting =
+                                    contentVM.setting.copy(fs = contentVM.setting.fs + 1)
+                                contentVM.setting = newSetting
+                                coroutineScope.launch {
+                                    db
+                                        .setting()
+                                        ?.insertOrUpdate(newSetting)
+                                }
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(Icons.Default.Add, contentDescription = null)
@@ -86,21 +117,27 @@ fun SettingPanel(modifier: Modifier = Modifier) {
                     items(backgroundColors) { item ->
                         Spacer(
                             modifier = Modifier
-                                .padding(horizontal = 4.dp, vertical = 8.dp)
+                                .padding(horizontal = 6.dp, vertical = 8.dp)
                                 .width(60.dp)
                                 .height(40.dp)
                                 .clip(RoundedCornerShape(4.dp))
                                 .background(item.color)
                                 .border(
                                     0.4.dp,
-                                    if (contentVM.currentBgColor.id == item.id) Color.Red else Color.Transparent,
+                                    if (contentVM.setting.colorId == item.id) Color.Red else Color.Transparent,
                                     shape = RoundedCornerShape(4.dp)
                                 )
                                 .clickable(
                                     indication = null,
                                     interactionSource = remember { MutableInteractionSource() }
                                 ) {
-                                    contentVM.currentBgColor = item
+                                    val newSetting = contentVM.setting.copy(colorId = item.id)
+                                    contentVM.setting = newSetting
+                                    coroutineScope.launch {
+                                        db
+                                            .setting()
+                                            ?.insertOrUpdate(newSetting)
+                                    }
                                 }
                         )
                     }

@@ -32,6 +32,11 @@ fun TopBar(modifier: Modifier = Modifier) {
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.data?.let { uri ->
+                // 授予持久性权限
+                context.contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
                 homeVM.addBook(context, uri) {
                     coroutineScope.launch {
                         db.bookshelf()?.insertOrUpdate(it)

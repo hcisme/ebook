@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.chc.ebook.ui.screen.content.ContentPage
 import com.chc.ebook.ui.screen.home.HomePage
 import com.chc.ebook.utils.LocalNavController
@@ -57,12 +59,19 @@ fun NavHostComp(modifier: Modifier = Modifier) {
         }
 
         composable(
-            CONTENTPAGE,
+            "$CONTENTPAGE/{id}",
+            arguments = listOf(
+                navArgument("id") {
+                    type = NavType.StringType
+                }
+            ),
             enterTransition = { enterTransition },
             popEnterTransition = null,
             popExitTransition = { exitTransition }
         ) {
-            ContentPage()
+            val id = it.arguments?.getString("id")!!.toInt()
+
+            ContentPage(id = id)
         }
     }
 }

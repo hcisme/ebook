@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +47,25 @@ fun BottomTool(modifier: Modifier = Modifier) {
             NavigationBar(
                 containerColor = MaterialTheme.colorScheme.onBackground
             ) {
+                NavigationBarItem(
+                    selected = false,
+                    onClick = {},
+                    icon = {
+                        Icon(
+                            Icons.Default.Menu,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.background.copy(alpha = 0.7f)
+                        )
+                    },
+                    label = {
+                        Text(
+                            "目录", color = MaterialTheme.colorScheme.background.copy(
+                                alpha = 0.7f
+                            )
+                        )
+                    }
+                )
+
                 NavigationBarItem(
                     selected = false,
                     onClick = {

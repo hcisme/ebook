@@ -6,16 +6,19 @@ import androidx.room.Room.databaseBuilder
 import androidx.room.RoomDatabase
 import com.chc.ebook.constant.Constants
 import com.chc.ebook.room.dao.BookshelfDao
+import com.chc.ebook.room.dao.SettingDao
 import com.chc.ebook.room.entity.Bookshelf
+import com.chc.ebook.room.entity.Setting
 import kotlin.concurrent.Volatile
 
 @Database(
-    entities = [Bookshelf::class],
-    version = Constants.ROOM_DATABASE_VERSION,
+    entities = [Bookshelf::class, Setting::class],
+    version = Constants.NEW_ROOM_DATABASE_VERSION,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bookshelf(): BookshelfDao?
+    abstract fun setting(): SettingDao?
 
     companion object {
         @Volatile
@@ -29,7 +32,7 @@ abstract class AppDatabase : RoomDatabase() {
                             context.applicationContext,
                             AppDatabase::class.java,
                             "app_database"
-                        ).build()
+                        ).addMigrations(MIGRATION_SETTING).build()
                     }
                 }
             }

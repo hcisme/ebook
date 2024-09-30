@@ -46,9 +46,13 @@ fun Body(modifier: Modifier = Modifier) {
                 changeStatusBarColor(window, insetsController, backgroundColor)
             }
     ) {
-        Column {
-            for (item in 1..100) {
-                Text("$item 你好，世界", fontSize = contentVM.fs.sp)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp)
+        ) {
+            if (contentVM.book != null) {
+                Text(text = contentVM.text, fontSize = contentVM.setting.fs.sp)
             }
         }
     }

@@ -62,7 +62,7 @@ fun HomePage() {
                     Book(
                         text = item.name,
                         onClick = {
-                            navController.navigate(CONTENTPAGE)
+                            navController.navigate("$CONTENTPAGE/${item.id}")
                         }
                     )
                 }
