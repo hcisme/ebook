@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chc.ebook.utils.LocalInsetsController
 import com.chc.ebook.utils.LocalWindow
@@ -47,7 +48,7 @@ fun Body(modifier: Modifier = Modifier) {
     ) {
         Column {
             for (item in 1..100) {
-                Text("$item")
+                Text("$item 你好，世界", fontSize = contentVM.fs.sp)
             }
         }
     }

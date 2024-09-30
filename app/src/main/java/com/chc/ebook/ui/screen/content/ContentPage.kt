@@ -29,6 +29,7 @@ fun ContentPage(modifier: Modifier = Modifier) {
     val insetsController = LocalInsetsController.current
     val window = LocalWindow.current
     val backgroundColor = MaterialTheme.colorScheme.background
+    val contentVM = viewModel<ContentViewModel>()
 
     LaunchedEffect(key1 = Unit) {
         hideStatusBar(insetsController)
@@ -37,7 +38,7 @@ fun ContentPage(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFFFFF8DC))
+            .background(contentVM.currentBgColor.color)
     ) {
 
         Body(
@@ -56,6 +57,8 @@ fun ContentPage(modifier: Modifier = Modifier) {
                 .align(Alignment.BottomCenter)
         )
     }
+
+    SettingPanel()
 
     BackHandler {
         changeStatusBarColor(window, insetsController, backgroundColor)
