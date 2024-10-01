@@ -1,5 +1,6 @@
 package com.chc.ebook.ui.screen.content
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import com.chc.ebook.utils.LocalNavController
 import com.chc.ebook.utils.LocalWindow
 import com.chc.ebook.utils.backgroundColors
 import com.chc.ebook.utils.changeStatusBarColor
+import com.chc.ebook.utils.extractChaptersFromUri
 import com.chc.ebook.utils.hideStatusBar
 import com.chc.ebook.utils.readTextFromUri
 import com.chc.ebook.utils.showStatusBar
@@ -45,6 +47,9 @@ fun ContentPage(modifier: Modifier = Modifier, id: Int) {
         contentVM.book = book
         if (book != null) {
             contentVM.text = readTextFromUri(context, book.path.toUri())
+            Log.i("@@", contentVM.text)
+            val chapters = extractChaptersFromUri(context, book.path.toUri())
+            contentVM.chapters.addAll(chapters)
         }
     }
 
@@ -69,13 +74,15 @@ fun ContentPage(modifier: Modifier = Modifier, id: Int) {
                 .navigationBarsPadding()
                 .align(Alignment.BottomCenter)
         )
+
+        BackHandler {
+            changeStatusBarColor(window, insetsController, backgroundColor)
+            showStatusBar(insetsController)
+            navController.popBackStack()
+        }
+
+        ChaptersDrawer()
     }
 
     SettingPanel()
-
-    BackHandler {
-        changeStatusBarColor(window, insetsController, backgroundColor)
-        showStatusBar(insetsController)
-        navController.popBackStack()
-    }
 }

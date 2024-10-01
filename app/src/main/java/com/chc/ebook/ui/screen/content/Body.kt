@@ -30,7 +30,7 @@ fun Body(modifier: Modifier = Modifier) {
 
     Box(
         modifier = modifier
-            .padding(top = 24.dp)
+            .padding(top = 24.dp, bottom = 8.dp)
             .fillMaxSize()
             .clickable(
                 indication = null,

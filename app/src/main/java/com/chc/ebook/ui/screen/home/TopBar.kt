@@ -2,6 +2,7 @@ package com.chc.ebook.ui.screen.home
 
 import android.app.Activity
 import android.content.Intent
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
@@ -17,7 +18,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.chc.ebook.room.entity.Bookshelf
 import com.chc.ebook.room.getDatabase
+import com.chc.ebook.utils.getFileNameByUri
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,10 +40,20 @@ fun TopBar(modifier: Modifier = Modifier) {
                     uri,
                     Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                 )
-                homeVM.addBook(context, uri) {
-                    coroutineScope.launch {
-                        db.bookshelf()?.insertOrUpdate(it)
-                    }
+                val fileName = getFileNameByUri(context, uri)!!
+                if (homeVM.bookList.any { it.name == fileName }) {
+                    Toast.makeText(context, "已存在", Toast.LENGTH_SHORT).show()
+                    return@rememberLauncherForActivityResult
+                }
+                val book = Bookshelf(
+                    name = fileName,
+                    path = uri.toString()
+                )
+                coroutineScope.launch {
+                    db.bookshelf()?.insertOrUpdate(book)
+                    val bookList = db.bookshelf()?.getAllBook()
+                    homeVM.bookList.clear()
+                    homeVM.bookList.addAll(bookList ?: listOf())
                 }
             }
         }

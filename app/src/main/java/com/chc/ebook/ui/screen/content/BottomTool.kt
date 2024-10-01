@@ -49,7 +49,9 @@ fun BottomTool(modifier: Modifier = Modifier) {
             ) {
                 NavigationBarItem(
                     selected = false,
-                    onClick = {},
+                    onClick = {
+                        contentVM.isShowChaptersDrawer = true
+                    },
                     icon = {
                         Icon(
                             Icons.Default.Menu,
