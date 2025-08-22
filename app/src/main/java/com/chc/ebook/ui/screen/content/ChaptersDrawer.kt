@@ -10,6 +10,7 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -82,6 +83,18 @@ fun ChaptersDrawer(modifier: Modifier = Modifier) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
+                item {
+                    Row(
+                        modifier = Modifier
+                            .padding(vertical = 16.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text("章节")
+                    }
+                    HorizontalDivider()
+                }
+
                 items(contentVM.chapters) { item ->
                     Box(
                         modifier = Modifier

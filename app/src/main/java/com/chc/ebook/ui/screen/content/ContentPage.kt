@@ -17,15 +17,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chc.ebook.room.getDatabase
+import com.chc.ebook.utils.FileReader
 import com.chc.ebook.utils.LocalInsetsController
 import com.chc.ebook.utils.LocalNavController
 import com.chc.ebook.utils.LocalWindow
 import com.chc.ebook.utils.backgroundColors
-import com.chc.ebook.utils.changeStatusBarColor
-import com.chc.ebook.utils.extractChaptersFromUri
+import com.chc.ebook.utils.getByteCount
 import com.chc.ebook.utils.hideStatusBar
-import com.chc.ebook.utils.readTextFromUri
-import com.chc.ebook.utils.showStatusBar
 
 @Composable
 fun ContentPage(modifier: Modifier = Modifier, id: Int) {
@@ -46,10 +44,10 @@ fun ContentPage(modifier: Modifier = Modifier, id: Int) {
         val book = db.bookshelf()?.getBookById(id)
         contentVM.book = book
         if (book != null) {
-            contentVM.text = readTextFromUri(context, book.path.toUri())
-            Log.i("@@", contentVM.text)
-            val chapters = extractChaptersFromUri(context, book.path.toUri())
-            contentVM.chapters.addAll(chapters)
+            val reader = FileReader(context, book.path.toUri())
+            contentVM.fileReader = reader
+            contentVM.chapters.addAll(reader.chapters)
+            contentVM.getCurrentText(1)
         }
     }
 
@@ -76,8 +74,12 @@ fun ContentPage(modifier: Modifier = Modifier, id: Int) {
         )
 
         BackHandler {
-            changeStatusBarColor(window, insetsController, backgroundColor)
-            showStatusBar(insetsController)
+            contentVM.changeStatusBarVisible(
+                visible = true,
+                window = window,
+                insetsController = insetsController,
+                color = backgroundColor
+            )
             navController.popBackStack()
         }
 

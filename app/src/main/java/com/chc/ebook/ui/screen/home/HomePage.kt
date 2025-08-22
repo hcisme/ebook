@@ -1,5 +1,6 @@
 package com.chc.ebook.ui.screen.home
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,6 +24,7 @@ import com.chc.ebook.components.Book
 import com.chc.ebook.navigationHost.CONTENTPAGE
 import com.chc.ebook.room.getDatabase
 import com.chc.ebook.utils.LocalNavController
+import com.chc.ebook.utils.backHomeScreen
 
 @Composable
 fun HomePage() {
@@ -69,5 +71,9 @@ fun HomePage() {
                 }
             }
         }
+    }
+
+    BackHandler {
+        backHomeScreen(context)
     }
 }

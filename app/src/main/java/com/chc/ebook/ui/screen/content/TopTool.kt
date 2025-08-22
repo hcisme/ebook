@@ -22,8 +22,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chc.ebook.utils.LocalInsetsController
 import com.chc.ebook.utils.LocalNavController
 import com.chc.ebook.utils.LocalWindow
-import com.chc.ebook.utils.changeStatusBarColor
-import com.chc.ebook.utils.showStatusBar
 
 @Composable
 fun TopTool(modifier: Modifier = Modifier) {
@@ -52,8 +50,12 @@ fun TopTool(modifier: Modifier = Modifier) {
         ) {
             IconButton(
                 onClick = {
-                    changeStatusBarColor(window, insetsController, backgroundColor)
-                    showStatusBar(insetsController)
+                    contentVM.changeStatusBarVisible(
+                        visible = true,
+                        window = window,
+                        insetsController = insetsController,
+                        color = backgroundColor
+                    )
                     navController.popBackStack()
                 }
             ) {

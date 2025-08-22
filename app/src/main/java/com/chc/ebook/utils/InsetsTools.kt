@@ -15,15 +15,18 @@ fun hideStatusBar(insetsController: WindowInsetsControllerCompat) = insetsContro
     WindowInsetsCompat.Type.statusBars()
 )
 
-fun changeStatusBarModel(insetsController: WindowInsetsControllerCompat, light: Boolean) {
-    insetsController.isAppearanceLightStatusBars = light
-}
-
-fun changeStatusBarColor(
+fun changeStatusBarColorAndVisible(
+    visible: Boolean,
     window: Window,
     insetsController: WindowInsetsControllerCompat,
     color: Color
 ) {
     insetsController.isAppearanceLightStatusBars = color.luminance() > 0.5
     window.statusBarColor = color.toArgb()
+
+    if (visible) {
+        showStatusBar(insetsController)
+    } else {
+        hideStatusBar(insetsController)
+    }
 }
